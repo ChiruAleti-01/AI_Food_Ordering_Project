@@ -1,0 +1,13 @@
+# dependencies
+node_modules/
+
+#system files
+.DS_Store
+
+# hint files
+.hintrc
+
+# environment secret
+.env
+config.env
+backend/config/config.env
