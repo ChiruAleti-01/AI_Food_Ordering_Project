@@ -32,12 +32,6 @@ localStorage.setItem("token", data.token);
 
 dispatch(loginSuccess(data.data.user));
 
-
-    dispatch(
-      loginSuccess(data.data.user)
-    );
-
-
   } catch (error) {
 
     dispatch(
