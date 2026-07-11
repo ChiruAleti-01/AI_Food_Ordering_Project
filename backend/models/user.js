@@ -87,7 +87,7 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
       this.passwordChangedAt.getTime() / 1000,
       10
     );
-
+ 
     return JWTTimestamp < changedTimestamp;
   }
 
@@ -99,7 +99,7 @@ userSchema.methods.getJWTToken = function () {
   return jwt.sign(
     { id: this._id },
     process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRE }
+    { expiresIn: process.env.JWT_EXPIRES }
   );
 };
 
