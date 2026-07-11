@@ -81,6 +81,7 @@ exports.login = catchAsyncErrors(async (req, res, next) => {
 
 // Protect Route
 exports.protect = catchAsyncErrors(async (req, res, next) => {
+  console.log("1. protect started");
 
   let token;
 
@@ -89,12 +90,14 @@ exports.protect = catchAsyncErrors(async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
-  } 
-  else if (req.cookies.jwt) {
+  } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
 
+  console.log("2. token:", token);
+
   if (!token) {
+    console.log("3. no token");
     return next(
       new ErrorHandler(
         "You are not logged in! Please log in to get access.",
@@ -103,34 +106,20 @@ exports.protect = catchAsyncErrors(async (req, res, next) => {
     );
   }
 
+  console.log("4. verifying token");
+
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+  console.log("5. decoded:", decoded);
 
   const currentUser = await User.findById(decoded.id);
 
-if (!currentUser) {
-  return next(
-    new ErrorHandler(
-      "User no longer exists. Please login again.",
-      401
-    )
-  );
-}
-
-  if (currentUser.changedPasswordAfter(decoded.iat)) {
-
-    return next(
-      new ErrorHandler(
-        "User recently changed password ! please log in again.",
-        404
-      )
-    );
-  }
+  console.log("6. current user:", currentUser?._id);
 
   req.user = currentUser;
 
   next();
 });
-
 
 // Get profile
 exports.getUserProfile = catchAsyncErrors(async (req, res, next) => {
