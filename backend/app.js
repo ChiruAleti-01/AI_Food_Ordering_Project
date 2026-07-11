@@ -11,13 +11,15 @@ const aiRoutes = require("./routes/ai.routes");
 
 const errorMiddleware = require("./middlewares/errors");
 
-app.use(
-  cors({
-    origin: "https://genie-food-app.netlify.app",
-    origin: "http://localhost:5173",
+  app.use(
+    cors({
+      origin: [
+        "http://localhost:5173",
+        "https://6a52353c64f1fe4ad6676b9d--food-genie-app.netlify.app",
+    ],
     credentials: true,
-  }),
-);
+  }));
+
 app.use(
   express.json({
     limit: "50mb",
