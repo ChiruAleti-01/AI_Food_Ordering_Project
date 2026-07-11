@@ -73,16 +73,18 @@ exports.login = catchAsyncErrors(async (req, res, next) => {
   if (!isPasswordMatched) {
     return next(new ErrorHandler("Invalid Email or Password", 401));
   }
-
+  console.log("===== LOGIN SUCCESS =====");
+  console.log("NODE_ENV:", process.env.NODE_ENV);
+  console.log("JWT_EXPIRES:", process.env.JWT_EXPIRES);
   sendToken(user, 200, res);
-
 });
-
 
 // Protect Route
 exports.protect = catchAsyncErrors(async (req, res, next) => {
   console.log("1. protect started");
 
+  console.log("Cookies:", req.cookies);
+  console.log("Cookie Header:", req.headers.cookie);
   let token;
 
   if (
@@ -273,13 +275,15 @@ exports.resetPassword = catchAsyncErrors(async (req, res, next) => {
 
 });
 
-
 // Logout
 exports.logout = catchAsyncErrors(async (req, res, next) => {
 
-  res.cookie("jwt", null, {
-    expires: new Date(Date.now()),
+  res.cookie("jwt", "", {
+    expires: new Date(0),
     httpOnly: true,
+    secure: true,
+    sameSite: "none",
+    path: "/",
   });
 
   res.status(200).json({
