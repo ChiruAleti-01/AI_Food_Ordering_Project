@@ -23,13 +23,14 @@ export const login = (email, password) => async (dispatch) => {
     dispatch(loginRequest());
 
 
-    const { data } = await api.post(
-      "/v1/users/login",
-      {
-        email,
-        password,
-      }
-    );
+    const { data } = await api.post("/v1/users/login", {
+  email,
+  password,
+});
+
+localStorage.setItem("token", data.token);
+
+dispatch(loginSuccess(data.data.user));
 
 
     dispatch(
@@ -64,7 +65,7 @@ export const register = (userData) => async (dispatch) => {
       "/v1/users/signup",
       userData
     );
-
+    localStorage.setItem("token", data.token);
 
     dispatch(
       loginSuccess(data.data.user)
@@ -163,17 +164,11 @@ export const updateProfile = (userData) => async (dispatch) => {
 export const logout = () => async (dispatch) => {
 
   try {
+localStorage.removeItem("token");
 
+await api.get("/v1/users/logout");
 
-    await api.get(
-      "/v1/users/logout"
-    );
-
-
-    dispatch(
-      logoutSuccess()
-    );
-
+dispatch(logoutSuccess());
 
   } catch (error) {
 

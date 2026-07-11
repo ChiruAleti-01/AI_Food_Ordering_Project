@@ -7,10 +7,19 @@ const api = axios.create({
       ? "/api"
       : "https://ai-food-ordering-project.onrender.com/api",
 
-  withCredentials: true,
-
   paramsSerializer: (params) =>
     qs.stringify(params, { arrayFormat: "repeat" }),
+});
+
+// Attach JWT token to every request
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
 });
 
 export default api;
